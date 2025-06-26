@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const postController = require('./controller/postController');
+const postController = require('../controller/postController');
+const verificarToken = require('../middleware/middleware.js');
 
-// Rota para criar um novo post
 router.post('/posts', postController.createPost);
-
-// Rota para listar todos os posts
 router.get('/posts', postController.getPosts);
 
 module.exports = router;

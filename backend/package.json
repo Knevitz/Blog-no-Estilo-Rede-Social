@@ -1,13 +1,31 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "swagger.js",
+  "description": "API da rede social com Node.js, PostgreSQL e JWT",
+  "main": "src/app.js",
   "scripts": {
-  "start": "node src/app.js"
-},
-  "keywords": [],
-  "author": "",
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "keywords": [
+    "api",
+    "nodejs",
+    "postgresql",
+    "jwt",
+    "rede social"
+  ],
+  "author": "Jão Zin",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
 }
