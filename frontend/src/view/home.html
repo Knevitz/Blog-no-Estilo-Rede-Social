@@ -1,52 +1,84 @@
 <!DOCTYPE html>
 <html lang="pt-br" ng-app="AppSocial">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>☭</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-  <link rel="stylesheet" href="index.css" />
-</head>
-<body ng-controller="PostController" class="bg-light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>☭</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body ng-controller="PostController" class="bg-light">
+    <nav class="navbar navbar-dark bg-dark px-3">
+      <div class="container-fluid">
+        <div class="d-flex flex-grow-1 align-items-center">
+          <!-- Logo - alinhada à esquerda em desktop, centralizada em mobile -->
+          <span
+            class="navbar-brand mb-0 h1 d-md-block d-flex justify-content-center w-100"
+            >☭</span
+          >
 
-  <nav class="navbar navbar-dark bg-dark px-3">
-    <span class="navbar-brand mb-0 h1">☭</span>
-    <input type="text" class="form-control mx-2 d-none d-md-block w-50" placeholder="Buscar...">
-    <span class="text-white">Menu</span>
-  </nav>
+          <!-- Campo de busca - centralizado em desktop, abaixo da logo em mobile -->
+          <div class="d-flex flex-grow-1 justify-content-center">
+            <input
+              type="text"
+              class="form-control mx-2 w-50 d-none d-md-block"
+              placeholder="Buscar..."
+            />
+          </div>
 
-  <main class="container my-4">
-    <div class="card mb-3" ng-repeat="post in posts">
-      <div class="card-body bg-dark text-white rounded">
-        <div class="d-flex align-items-center mb-3">
-          <div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center text-white me-3" style="width: 40px; height: 40px;">
-            <span class="fw-bold">{{foto.usuario}}</span>
-          </div>
-          <div>
-            <strong>{{ post.nome }}</strong><br>
-            <small class="text-muted">@{{ post.usuario }}</small>
-          </div>
+          <!-- Menu - mantido como estava -->
+          <span class="text-white d-md-none">Menu</span>
         </div>
-        <div class="bg-light text-dark p-3 rounded">
-          {{ post.texto }}
-        </div>
-        <div class="mt-2">
-          <span class="badge bg-secondary me-1" ng-repeat="tag in post.tags">#{{ tag }}</span>
-        </div>
-        <div class="mt-3 d-flex gap-3">
-          <btn>like</btn>
-          <btn>comment</btn>
-        </div>
-        <div class="mt-3 text-muted">
-          {{ post.data | date:'dd/MM/yyyy HH:mm' }}
+
+        <!-- Campo de busca para mobile - aparece abaixo da logo -->
+        <div class="w-100 d-md-none mt-2">
+          <input
+            type="text"
+            class="form-control w-100"
+            placeholder="Buscar..."
+          />
         </div>
       </div>
-    </div>
-  </main>
+    </nav>
 
-  <!-- AngularJS Controller -->
-  <script src="app.js"></script>
-</body>
+    <main class="container my-4">
+      <div class="card mb-3" ng-repeat="post in posts">
+        <div class="card-body bg-dark text-white rounded">
+          <div class="d-flex align-items-center mb-3">
+            <div
+              class="rounded-circle bg-secondary d-flex justify-content-center align-items-center text-white me-3"
+              style="width: 40px; height: 40px"
+            >
+              <span class="fw-bold">{{foto.usuario}}</span>
+            </div>
+            <div>
+              <strong>{{ post.nome }}</strong><br />
+              <small class="text-muted">@{{ post.usuario }}</small>
+            </div>
+          </div>
+          <div class="bg-light text-dark p-3 rounded">{{ post.texto }}</div>
+          <div class="mt-2">
+            <span class="badge bg-secondary me-1" ng-repeat="tag in post.tags"
+              >#{{ tag }}</span
+            >
+          </div>
+          <div class="mt-3 d-flex gap-3">
+            <btn>like</btn>
+            <btn>comment</btn>
+          </div>
+          <div class="mt-3 text-muted">
+            {{ post.data | date:'dd/MM/yyyy HH:mm' }}
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- AngularJS Controller -->
+    <script src="app.js"></script>
+  </body>
 </html>
