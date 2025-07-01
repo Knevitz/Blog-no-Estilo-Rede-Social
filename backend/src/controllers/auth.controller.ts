@@ -27,11 +27,16 @@ export class AuthController {
 
       const user = await this.authService.register(
         registerDTO.email,
-        registerDTO.password
+        registerDTO.username,
+        registerDTO.password,
+        registerDTO.name
       );
+
       return res.status(201).json({
         id: user.id,
         email: user.email,
+        username: user.username,
+        name: user.name,
         role: user.role,
       });
     } catch (error: any) {
@@ -136,6 +141,8 @@ export class AuthController {
     return res.json({
       id: req.user?.id,
       email: req.user?.email,
+      username: req.user?.username,
+      name: req.user?.name,
       role: req.user?.role,
     });
   }

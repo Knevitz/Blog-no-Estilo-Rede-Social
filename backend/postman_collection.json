@@ -1,164 +1,251 @@
 {
   "info": {
-    "_postman_id": "a1b2c3d4-e5f6-7890",
-    "name": "Blog Social - Authentication",
+    "_postman_id": "papo-popular-123",
+    "name": "Blog Social - API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Authentication",
+      "name": "Auth",
       "item": [
         {
           "name": "Register",
           "request": {
             "method": "POST",
-            "header": [],
+            "url": "{{base_url}}/auth/register",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"SecurePassword123!\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/auth/register",
-              "host": ["{{base_url}}"],
-              "path": ["auth", "register"]
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"SecurePass123!\"\n}",
+              "options": { "raw": { "language": "json" } }
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Login",
           "request": {
             "method": "POST",
-            "header": [],
+            "url": "{{base_url}}/auth/login",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"SecurePassword123!\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/auth/login",
-              "host": ["{{base_url}}"],
-              "path": ["auth", "login"]
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"SecurePass123!\"\n}",
+              "options": { "raw": { "language": "json" } }
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Refresh Token",
           "request": {
             "method": "POST",
-            "header": [],
+            "url": "{{base_url}}/auth/refresh-token",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/auth/refresh-token",
-              "host": ["{{base_url}}"],
-              "path": ["auth", "refresh-token"]
+              "options": { "raw": { "language": "json" } }
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Forgot Password",
           "request": {
             "method": "POST",
-            "header": [],
+            "url": "{{base_url}}/auth/forgot-password",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"user@example.com\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/auth/forgot-password",
-              "host": ["{{base_url}}"],
-              "path": ["auth", "forgot-password"]
+              "options": { "raw": { "language": "json" } }
             }
-          },
-          "response": []
+          }
+        },
+        {
+          "name": "Validate Reset Token",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/auth/validate-reset-token?token={{reset_token}}"
+          }
         },
         {
           "name": "Reset Password",
           "request": {
             "method": "POST",
-            "header": [],
+            "url": "{{base_url}}/auth/reset-password",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"token\": \"{{reset_token}}\",\n  \"newPassword\": \"NewSecurePassword123!\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/auth/reset-password",
-              "host": ["{{base_url}}"],
-              "path": ["auth", "reset-password"]
+              "raw": "{\n  \"token\": \"{{reset_token}}\",\n  \"newPassword\": \"NewPass456!\"\n}",
+              "options": { "raw": { "language": "json" } }
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Get Profile",
           "request": {
             "method": "GET",
+            "url": "{{base_url}}/auth/profile",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/users",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ]
+          }
+        },
+        {
+          "name": "Get Single User",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/users/1",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Posts",
+      "item": [
+        {
+          "name": "Create Post",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/posts",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
             ],
             "body": {
               "mode": "raw",
-              "raw": ""
-            },
-            "url": {
-              "raw": "{{base_url}}/auth/profile",
-              "host": ["{{base_url}}"],
-              "path": ["auth", "profile"]
+              "raw": "{\n  \"content\": \"Postagem nova\",\n  \"isPrivate\": false\n}",
+              "options": { "raw": { "language": "json" } }
             }
-          },
-          "response": []
+          }
+        },
+        {
+          "name": "Get All Posts",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/posts"
+          }
+        },
+        {
+          "name": "Get Post by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/posts/1"
+          }
+        },
+        {
+          "name": "Update Post",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/posts/1",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Editado\",\n  \"isPrivate\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Delete Post",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/posts/1",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comments",
+      "item": [
+        {
+          "name": "Create Comment",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/comments",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"postId\": 1,\n  \"content\": \"Comentário novo\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Reply to Comment",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/comments",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"postId\": 1,\n  \"content\": \"Resposta ao comentário\",\n  \"parentId\": 2\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Delete Comment",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/comments/1",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Likes",
+      "item": [
+        {
+          "name": "Toggle Like on Post",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/likes/post/1",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ]
+          }
+        },
+        {
+          "name": "Toggle Like on Comment",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/likes/comment/2",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ]
+          }
         }
       ]
     }
   ],
   "variable": [
-    {
-      "key": "base_url",
-      "value": "http://localhost:3000"
-    },
-    {
-      "key": "access_token",
-      "value": ""
-    },
-    {
-      "key": "refresh_token",
-      "value": ""
-    },
-    {
-      "key": "reset_token",
-      "value": ""
-    }
+    { "key": "base_url", "value": "http://localhost:3000" },
+    { "key": "access_token", "value": "" },
+    { "key": "refresh_token", "value": "" },
+    { "key": "reset_token", "value": "" }
   ]
 }

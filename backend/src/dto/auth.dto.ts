@@ -4,11 +4,25 @@ import {
   MinLength,
   MaxLength,
   Matches,
+  IsOptional,
+  IsString,
 } from "class-validator";
 
 export class RegisterDTO {
   @IsEmail()
   email: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Matches(/^[a-zA-Z0-9_]{3,20}$/, {
+    message:
+      "Username deve ter entre 3 e 20 caracteres e conter apenas letras, números ou _",
+  })
+  username: string;
+
+  @IsOptional()
+  @IsString()
+  name?: string;
 
   @IsNotEmpty()
   @MinLength(8)
