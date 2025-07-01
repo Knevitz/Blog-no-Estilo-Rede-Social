@@ -5,6 +5,7 @@ import { User } from "../entities/User";
 import { Post } from "../entities/Post";
 import { Comment } from "../entities/Comment";
 import { Like } from "../entities/Like";
+import { Follow } from "../entities/Follow";
 dotenv.config();
 
 export const AppDataSource = new DataSource({
@@ -12,7 +13,7 @@ export const AppDataSource = new DataSource({
   url: process.env.DATABASE_URL,
   synchronize: process.env.NODE_ENV !== "production",
   logging: process.env.NODE_ENV === "development",
-  entities: [User, Post, Comment, Like],
+  entities: [User, Post, Comment, Like, Follow],
   migrations: [],
   subscribers: [],
   ssl: true,

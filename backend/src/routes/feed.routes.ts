@@ -1,3 +1,4 @@
+// src/routes/feed.routes.ts
 import { Router } from "express";
 import { FeedController } from "../controllers/feed.controller";
 import { authenticate } from "../middlewares/auth.middleware";

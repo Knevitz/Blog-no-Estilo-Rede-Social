@@ -1,3 +1,4 @@
+// src/routes/comment.routes.ts
 import { Router } from "express";
 import { CommentController } from "../controllers/comment.controller";
 import { authenticate } from "../middlewares/auth.middleware";

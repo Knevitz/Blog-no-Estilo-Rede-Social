@@ -1,3 +1,4 @@
+// src/routes/like.routes.ts
 import { Router } from "express";
 import { LikeController } from "../controllers/like.controller";
 import { authenticate } from "../middlewares/auth.middleware";
