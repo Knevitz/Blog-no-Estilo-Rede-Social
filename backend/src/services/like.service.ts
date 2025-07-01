@@ -4,7 +4,6 @@ import { Like } from "../entities/Like";
 import { User } from "../entities/User";
 import { Post } from "../entities/Post";
 import { Comment } from "../entities/Comment";
-import { Repository } from "typeorm";
 
 const likeRepo = AppDataSource.getRepository(Like);
 const userRepo = AppDataSource.getRepository(User);

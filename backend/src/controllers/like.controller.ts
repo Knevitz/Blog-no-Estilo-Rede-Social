@@ -1,22 +1,29 @@
+// src/controllers/like.controller.ts
 import { Request, Response } from "express";
 import { LikeService } from "../services/like.service";
 
 export class LikeController {
-  private service = new LikeService();
-
-  togglePostLike = async (req: Request, res: Response) => {
-    const user = req.user!;
+  async togglePostLike(req: Request, res: Response) {
+    const userId = req.user!.id;
     const postId = Number(req.params.id);
 
-    const result = await this.service.togglePostLike(postId, user);
-    res.json(result);
-  };
+    try {
+      const result = await LikeService.togglePostLike(userId, postId);
+      res.json({ message: result });
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  }
 
-  toggleCommentLike = async (req: Request, res: Response) => {
-    const user = req.user!;
+  async toggleCommentLike(req: Request, res: Response) {
+    const userId = req.user!.id;
     const commentId = Number(req.params.id);
 
-    const result = await this.service.toggleCommentLike(commentId, user);
-    res.json(result);
-  };
+    try {
+      const result = await LikeService.toggleCommentLike(userId, commentId);
+      res.json({ message: result });
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  }
 }
