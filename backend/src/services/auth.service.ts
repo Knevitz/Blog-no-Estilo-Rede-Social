@@ -16,23 +16,30 @@ export class AuthService {
     this.userRepository = AppDataSource.getRepository(User);
   }
 
-  async register(email: string, password: string): Promise<User> {
+  async register(
+    email: string,
+    username: string,
+    password: string,
+    name?: string
+  ): Promise<User> {
     const existingUser = await this.userRepository.findOne({
-      where: { email },
+      where: [{ email }, { username }],
     });
+
     if (existingUser) {
-      throw new Error("Email já em uso");
+      throw new Error("Email ou nome de usuário já em uso");
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
-    const user = this.userRepository.create({
+    const newUser = this.userRepository.create({
       email,
+      username,
+      name,
       password: hashedPassword,
       role: "user",
     });
 
-    await this.userRepository.save(user);
-    return user;
+    return await this.userRepository.save(newUser);
   }
 
   async login(
@@ -40,22 +47,24 @@ export class AuthService {
     password: string
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const user = await this.userRepository.findOne({ where: { email } });
-    if (!user) throw new Error("Email ou senha errados");
+    if (!user) throw new Error("Email ou senha incorretos");
 
     if (user.blockExpires && user.blockExpires > new Date()) {
       throw new Error(
-        "Conta temporariamente bloqueada devido a muitas tentativas mal sucedidas"
+        "Conta temporariamente bloqueada por tentativas inválidas"
       );
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       user.loginAttempts += 1;
+
       if (user.loginAttempts >= 5) {
-        user.blockExpires = new Date(Date.now() + 30 * 60 * 1000); // 30 min
+        user.blockExpires = new Date(Date.now() + 30 * 60 * 1000); // 30 minutos
       }
+
       await this.userRepository.save(user);
-      throw new Error("Email ou senha errados");
+      throw new Error("Email ou senha incorretos");
     }
 
     user.loginAttempts = 0;
@@ -72,11 +81,12 @@ export class AuthService {
     const payload = {
       userId: user.id,
       email: user.email,
+      username: user.username,
       role: user.role,
     };
 
-    const secret = process.env.JWT_ACCESS_SECRET as string;
-    if (!secret) throw new Error("JWT_ACCESS_SECRET não está definida");
+    const secret = process.env.JWT_ACCESS_SECRET;
+    if (!secret) throw new Error("JWT_ACCESS_SECRET não definida");
 
     const expiresIn = (process.env.ACCESS_TOKEN_EXPIRES_IN ||
       "15m") as SignOptions["expiresIn"];
@@ -87,8 +97,8 @@ export class AuthService {
   private generateRefreshToken(user: User): string {
     const payload = { userId: user.id };
 
-    const secret = process.env.JWT_REFRESH_SECRET as string;
-    if (!secret) throw new Error("JWT_REFRESH_SECRET não está definida");
+    const secret = process.env.JWT_REFRESH_SECRET;
+    if (!secret) throw new Error("JWT_REFRESH_SECRET não definida");
 
     const expiresIn = (process.env.REFRESH_TOKEN_EXPIRES_IN ||
       "7d") as SignOptions["expiresIn"];
@@ -106,10 +116,10 @@ export class AuthService {
       const user = await this.userRepository.findOne({
         where: { id: payload.userId },
       });
-      if (!user) throw new Error("Usuário não encontardo");
+      if (!user) throw new Error("Usuário não encontrado");
 
       return { accessToken: this.generateAccessToken(user) };
-    } catch (error) {
+    } catch {
       throw new Error("Token de atualização inválido");
     }
   }
@@ -119,6 +129,7 @@ export class AuthService {
     if (!user) return;
 
     const resetToken = crypto.randomBytes(32).toString("hex");
+
     user.resetPasswordToken = resetToken;
     user.resetTokenExpiry = new Date(Date.now() + 30 * 60 * 1000); // 30 min
 
@@ -144,13 +155,12 @@ export class AuthService {
     await transporter.sendMail({
       from: `"Papo Popular" <${process.env.SMTP_USER}>`,
       to: email,
-      subject: "Redefinir senha",
+      subject: "Redefinição de senha",
       html: `
-        <p>Você solicitou uma redefinição de senha para sua conta do Papo Popular.</p>
-        <p>Clique no link abaxo para redefinir a senha:</p>
+        <p>Você solicitou uma redefinição de senha para sua conta no Papo Popular.</p>
+        <p>Clique no link abaixo para redefinir sua senha:</p>
         <a href="${resetUrl}">${resetUrl}</a>
-        <p>Se você não pediu isso, apenas desconsidere esse email.</p>
-        <p>O link expira em 30 minutos.</p>
+        <p>Esse link expirará em 30 minutos.</p>
       `,
     });
   }
@@ -163,7 +173,7 @@ export class AuthService {
       },
     });
 
-    if (!user) throw new Error("Token invalido ou expirado");
+    if (!user) throw new Error("Token inválido ou expirado");
 
     user.password = await bcrypt.hash(newPassword, 12);
     user.resetPasswordToken = null;
