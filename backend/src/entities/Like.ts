@@ -1,8 +1,9 @@
+// src/entities/Like.ts
 import {
   Entity,
   PrimaryGeneratedColumn,
-  CreateDateColumn,
   ManyToOne,
+  CreateDateColumn,
 } from "typeorm";
 import { User } from "./User";
 import { Post } from "./Post";

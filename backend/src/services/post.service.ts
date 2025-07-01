@@ -19,7 +19,7 @@ export const PostService = {
     const posts = await postRepo.find({
       where: { isPublic: true },
       relations: ["author"],
-      order: { createdAt: "DESC" },
+      order: { likeCount: "DESC", createdAt: "DESC" },
     });
 
     return posts.map(this.sanitizePost);
@@ -74,6 +74,7 @@ export const PostService = {
       id: post.id,
       content: post.content,
       isPublic: post.isPublic,
+      likeCount: post.likeCount,
       createdAt: post.createdAt,
       author: {
         id: post.author.id,

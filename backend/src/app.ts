@@ -10,6 +10,7 @@ import postRoutes from "./routes/post.routes";
 import commentRoutes from "./routes/comment.routes";
 import userRoutes from "./routes/user.routes";
 import likeRoutes from "./routes/like.routes";
+import feedRoutes from "./routes/feed.routes";
 
 export function createApp() {
   const app = express();
@@ -17,6 +18,7 @@ export function createApp() {
   // Middlewares globais
   app.use(cors());
   app.use(express.json());
+  app.use("/feed", feedRoutes);
 
   // Documentação Swagger
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));

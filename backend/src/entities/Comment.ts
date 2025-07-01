@@ -3,25 +3,26 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
   CreateDateColumn,
+  ManyToOne,
   OneToMany,
 } from "typeorm";
 import { User } from "./User";
 import { Post } from "./Post";
 import { Like } from "./Like";
+
 @Entity()
 export class Comment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column("text")
   content: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @Column({ default: 0 })
+  likeCount: number;
 
-  @ManyToOne(() => User, (user) => user.comments, { onDelete: "CASCADE" })
+  @ManyToOne(() => User, (user) => user.comments, { eager: true })
   author: User;
 
   @ManyToOne(() => Post, (post) => post.comments, { onDelete: "CASCADE" })
@@ -33,9 +34,14 @@ export class Comment {
   })
   parent?: Comment;
 
-  @OneToMany(() => Comment, (comment) => comment.parent)
+  @OneToMany(() => Comment, (comment) => comment.parent, {
+    cascade: true,
+  })
   replies: Comment[];
 
   @OneToMany(() => Like, (like) => like.comment)
   likes: Like[];
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

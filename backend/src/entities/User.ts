@@ -1,3 +1,4 @@
+// src/entities/User.ts
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -18,6 +19,7 @@ import { Exclude } from "class-transformer";
 import { Post } from "./Post";
 import { Comment } from "./Comment";
 import { Like } from "./Like";
+import { Follow } from "./Follow";
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -84,4 +86,10 @@ export class User {
 
   @OneToMany(() => Like, (like) => like.user)
   likes: Like[];
+
+  @OneToMany(() => Follow, (follow) => follow.follower)
+  following: Follow[];
+
+  @OneToMany(() => Follow, (follow) => follow.following)
+  followers: Follow[];
 }

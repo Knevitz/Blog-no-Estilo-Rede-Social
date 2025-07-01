@@ -9,13 +9,55 @@ const commentRepo = AppDataSource.getRepository(Comment);
 const postRepo = AppDataSource.getRepository(Post);
 const userRepo = AppDataSource.getRepository(User);
 
+// Interface para retorno seguro
+interface SanitizedUser {
+  id: number;
+  username: string;
+  name?: string;
+}
+
+interface SanitizedComment {
+  id: number;
+  content: string;
+  likeCount: number;
+  createdAt: Date;
+  author: SanitizedUser;
+  replies?: SanitizedComment[];
+}
+
+function sanitizeUser(user: User): SanitizedUser {
+  return {
+    id: user.id,
+    username: user.username,
+    name: user.name,
+  };
+}
+
+function sanitizeComment(comment: Comment): SanitizedComment {
+  return {
+    id: comment.id,
+    content: comment.content,
+    likeCount: comment.likeCount,
+    createdAt: comment.createdAt,
+    author: sanitizeUser(comment.author),
+  };
+}
+
+function sanitizeCommentTree(comment: Comment): SanitizedComment {
+  const base = sanitizeComment(comment);
+  if (comment.replies && comment.replies.length > 0) {
+    base.replies = comment.replies.map(sanitizeCommentTree);
+  }
+  return base;
+}
+
 export const CommentService = {
   async create(
     userId: number,
     postId: number,
     content: string,
     parentId?: number
-  ) {
+  ): Promise<SanitizedComment> {
     const user = await userRepo.findOneByOrFail({ id: userId });
     const post = await postRepo.findOneByOrFail({ id: postId });
 
@@ -26,10 +68,16 @@ export const CommentService = {
       comment.parent = parent;
     }
 
-    return await commentRepo.save(comment);
+    const saved = await commentRepo.save(comment);
+    const fullComment = await commentRepo.findOneOrFail({
+      where: { id: saved.id },
+      relations: ["author", "replies", "replies.author"],
+    });
+
+    return sanitizeCommentTree(fullComment);
   },
 
-  async getByPost(postId: number) {
+  async getByPost(postId: number): Promise<SanitizedComment[]> {
     const comments = await commentRepo.find({
       where: {
         post: { id: postId },
@@ -39,10 +87,10 @@ export const CommentService = {
       order: { createdAt: "ASC" },
     });
 
-    return comments;
+    return comments.map(sanitizeCommentTree);
   },
 
-  async remove(id: number, userId: number) {
+  async remove(id: number, userId: number): Promise<void> {
     const comment = await commentRepo.findOneOrFail({
       where: { id },
       relations: ["author"],

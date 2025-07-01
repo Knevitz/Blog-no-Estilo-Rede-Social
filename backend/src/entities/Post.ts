@@ -16,16 +16,16 @@ export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column("text")
   content: string;
 
   @Column({ default: true })
   isPublic: boolean;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @Column({ default: 0 })
+  likeCount: number;
 
-  @ManyToOne(() => User, (user) => user.posts, { onDelete: "CASCADE" })
+  @ManyToOne(() => User, (user) => user.posts, { eager: true })
   author: User;
 
   @OneToMany(() => Comment, (comment) => comment.post)
@@ -33,4 +33,7 @@ export class Post {
 
   @OneToMany(() => Like, (like) => like.post)
   likes: Like[];
+
+  @CreateDateColumn()
+  createdAt: Date;
 }
