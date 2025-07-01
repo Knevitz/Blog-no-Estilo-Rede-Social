@@ -1,0 +1,97 @@
+ html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: black;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: sans-serif;
+    }
+
+    .stars, .stars2 {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .stars::before, .stars2::before {
+      content: '';
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      animation: anim-stars linear infinite;
+    }
+
+    .stars::before {
+      box-shadow:
+        20vw 10vh white, 40vw 20vh white, 60vw 30vh white,
+        80vw 40vh white, 10vw 50vh white, 30vw 60vh white,
+       25vw 15vh white, 45vw 25vh white, 65vw 35vh white,
+        85vw 45vh white, 15vw 55vh white, 35vw 65vh white,
+        55vw 75vh white, 75vw 85vh white, 95vw 95vh white,
+        50vw 70vh white, 70vw 80vh white, 90vw 90vh white,
+        50vw 70vh white, 70vw 80vh white, 90vw 90vh white,
+        50vw 70vh white, 70vw 80vh white, 90vw 90vh white,
+        50vw 70vh white, 70vw 80vh white, 90vw 90vh white;
+      animation-duration: 20s;
+    }
+
+    .stars2::before {
+      box-shadow:
+        25vw 15vh white, 45vw 25vh white, 65vw 35vh white,
+        85vw 45vh white, 15vw 55vh white, 35vw 65vh white,
+        55vw 75vh white, 75vw 85vh white, 95vw 95vh white,
+        50vw 70vh white, 70vw 80vh white, 90vw 90vh white,
+        50vw 70vh white, 70vw 80vh white, 90vw 90vh white,
+        50vw 70vh white, 70vw 80vh white, 90vw 90vh white,
+         25vw 15vh white, 45vw 25vh white, 65vw 35vh white,
+        85vw 45vh white, 15vw 55vh white, 35vw 65vh white,
+        55vw 75vh white, 75vw 85vh white, 95vw 95vh white,
+        50vw 70vh white, 70vw 80vh white, 90vw 90vh white,
+        50vw 70vh white, 70vw 80vh white, 90vw 90vh white,
+        50vw 70vh white, 70vw 80vh white, 90vw 90vh white,
+        50vw 70vh white, 70vw 80vh white, 90vw 90vh white;
+      animation-duration: 40s;
+      width: 1px;
+      height: 1px;
+    }
+
+    @keyframes anim-stars {
+      from { transform: translateY(0); }
+      to { transform: translateY(-100vh); }
+    }
+
+    .login-box {
+      background-color: rgba(0, 0, 0, 0.85);
+      padding: 30px;
+      border-radius: 12px;
+      z-index: 1;
+      width: 100%;
+      max-width: 400px;
+      color: white;
+      text-align: center;
+    }
+
+    .form-control, .btn {
+      border-radius: 8px;
+    }
+
+    .btn-primary {
+      background-color: #fd0202;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #f80606;
+    }
+
+    .h3 {
+      font-size: 30rem;
+    }
