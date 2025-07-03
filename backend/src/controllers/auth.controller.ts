@@ -29,7 +29,8 @@ export class AuthController {
         registerDTO.email,
         registerDTO.username,
         registerDTO.password,
-        registerDTO.name
+        registerDTO.name,
+        registerDTO.bio
       );
 
       return res.status(201).json({

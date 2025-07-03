@@ -1,4 +1,3 @@
-// src/services/post.service.ts
 import { AppDataSource } from "../config/data-source";
 import { Post } from "../entities/Post";
 import { User } from "../entities/User";
@@ -21,7 +20,6 @@ export const PostService = {
       relations: ["author"],
       order: { likeCount: "DESC", createdAt: "DESC" },
     });
-
     return posts.map(this.sanitizePost);
   },
 
@@ -31,7 +29,6 @@ export const PostService = {
       relations: ["author"],
     });
     if (!post) throw new Error("Post não encontrado");
-
     return this.sanitizePost(post);
   },
 
@@ -44,10 +41,8 @@ export const PostService = {
       where: { id },
       relations: ["author"],
     });
-
-    if (post.author.id !== userId) {
+    if (post.author.id !== userId)
       throw new Error("Você não tem permissão para editar este post");
-    }
 
     post.content = data.content ?? post.content;
     post.isPublic = data.isPublic ?? post.isPublic;
@@ -61,10 +56,8 @@ export const PostService = {
       where: { id },
       relations: ["author"],
     });
-
-    if (post.author.id !== userId) {
+    if (post.author.id !== userId)
       throw new Error("Você não tem permissão para excluir este post");
-    }
 
     await postRepo.remove(post);
   },
@@ -75,13 +68,13 @@ export const PostService = {
       content: post.content,
       isPublic: post.isPublic,
       likeCount: post.likeCount,
-      createdAt: post.createdAt,
+      createdAt: post.createdAt.toISOString(), // UTC ISO para frontend calcular tempo relativo
       author: {
         id: post.author.id,
         username: post.author.username,
         name: post.author.name,
         bio: post.author.bio,
-        createdAt: post.author.createdAt,
+        createdAt: post.author.createdAt.toISOString(),
       },
     };
   },

@@ -1,0 +1,104 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  background-color: #f8f9fa;
+}
+
+/* Sidebar à direita que sobrepõe conteúdo */
+#sidebar {
+  position: fixed;
+  top: 56px;
+  right: 0;
+  width: 280px;
+  height: calc(100% - 56px);
+  overflow-y: auto;
+  background-color: #0d0d0d;
+  color: white;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1050;
+  padding: 1rem;
+}
+
+#sidebar.aberto {
+  transform: translateX(0);
+}
+
+.sidebar-user {
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-user:hover {
+  background-color: #0d0d0d;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.perfil-logado {
+  background-color: #343a40;
+}
+
+/* Botão novo post */
+.btn-novo-post {
+  bottom: 20px !important;
+  right: 20px !important;
+  width: 60px !important;
+  height: 60px !important;
+  font-size: 32px !important;
+}
+
+main.container {
+  padding: 56px !important; /* altura do navbar fixo */
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: #d9d9d9;
+}
+
+.card-body {
+  border-radius: 15px;
+}
+
+.bg-dark {
+  background-color: #0d0d0d !important;
+}
+
+.bg-light {
+  background-color: #d9d9d9 !important;
+}
+
+.badge {
+  font-size: 0.85rem;
+}
+
+.navbar input[type="text"] {
+  border-radius: 20px;
+}
+
+.form-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-box {
+  background-color: #212529;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
+}

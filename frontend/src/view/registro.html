@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>☭ Registro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="ReL.css" />
+    <link rel="stylesheet" href="index.css" />
+  </head>
+
+  <body class="bg-dark text-white">
+    <div class="stars"></div>
+    <div class="stars2"></div>
+
+    <div
+      class="login-box container d-flex flex-column justify-content-center align-items-center vh-100"
+    >
+      <div class="w-100" style="max-width: 400px">
+        <h1 class="mb-2 text-center">☭</h1>
+        <h1 class="mb-4 text-center">Registro</h1>
+
+        <form id="registerForm" novalidate>
+          <div class="mb-3">
+            <input
+              type="email"
+              id="email"
+              class="form-control"
+              placeholder="E-mail"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <input
+              type="text"
+              id="nome"
+              class="form-control"
+              placeholder="Nome"
+              required
+            />
+          </div>
+
+          <div class="mb-3 input-group">
+            <span class="input-group-text">@</span>
+            <input
+              type="text"
+              id="usuario"
+              class="form-control"
+              placeholder="Usuário (sem @)"
+              required
+              pattern="^[a-zA-Z0-9_]{3,20}$"
+              title="Entre 3 e 20 caracteres. Letras, números ou _"
+            />
+          </div>
+
+          <div class="mb-3 position-relative">
+            <input
+              type="password"
+              id="senha"
+              class="form-control"
+              placeholder="Senha"
+              required
+            />
+            <button
+              type="button"
+              class="btn btn-sm btn-secondary position-absolute top-0 end-0 mt-1 me-2"
+              onclick="toggleSenha('senha', this)"
+            >
+              ***
+            </button>
+          </div>
+
+          <div class="mb-3 position-relative">
+            <input
+              type="password"
+              id="confirmarSenha"
+              class="form-control"
+              placeholder="Confirmar Senha"
+              required
+            />
+            <button
+              type="button"
+              class="btn btn-sm btn-secondary position-absolute top-0 end-0 mt-1 me-2"
+              onclick="toggleSenha('confirmarSenha', this)"
+            >
+              ***
+            </button>
+          </div>
+
+          <div class="mb-3">
+            <textarea
+              id="bio"
+              class="form-control"
+              placeholder="Bio / pensamento livre (até 150 caracteres)"
+              rows="3"
+              maxlength="150"
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">Registrar</button>
+        </form>
+
+        <div class="mt-3 text-center">
+          <a href="frontend/src/view/login.html" class="text-white"
+            >Já tenho uma conta</a
+          >
+        </div>
+
+        <div id="mensagem" class="mt-3 text-center text-warning"></div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "http://localhost:3000";
+
+      function toggleSenha(id, btn) {
+        const input = document.getElementById(id);
+        input.type = input.type === "password" ? "text" : "password";
+        btn.textContent = input.type === "text" ? "123" : "***";
+      }
+
+      const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{8,}$/;
+
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const email = document.getElementById("email").value.trim();
+          const nome = document.getElementById("nome").value.trim();
+          let usuario = document.getElementById("usuario").value.trim();
+          const senha = document.getElementById("senha").value;
+          const confirmarSenha =
+            document.getElementById("confirmarSenha").value;
+          const bio = document.getElementById("bio").value.trim();
+          const mensagemEl = document.getElementById("mensagem");
+
+          mensagemEl.textContent = "";
+          mensagemEl.classList.remove("text-success");
+          mensagemEl.classList.add("text-warning");
+
+          if (!email || !nome || !usuario || !senha || !confirmarSenha) {
+            mensagemEl.textContent = "Preencha todos os campos obrigatórios.";
+            return;
+          }
+
+          const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+          if (!emailValido) {
+            mensagemEl.textContent = "E-mail inválido.";
+            return;
+          }
+
+          try {
+            const checkEmail = await fetch(`${API_BASE}/auth/check-email`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email }),
+            });
+            if (!checkEmail.ok) throw new Error();
+            const dataEmail = await checkEmail.json();
+            if (dataEmail.exists) {
+              mensagemEl.textContent = "E-mail já cadastrado.";
+              return;
+            }
+          } catch {
+            mensagemEl.textContent = "Erro ao verificar e-mail.";
+            return;
+          }
+
+          if (usuario.startsWith("@")) usuario = usuario.slice(1);
+
+          if (!/^[a-zA-Z0-9_]{3,20}$/.test(usuario)) {
+            mensagemEl.textContent =
+              "Usuário deve ter entre 3 e 20 caracteres (letras, números ou _)";
+            return;
+          }
+
+          try {
+            const checkUser = await fetch(`${API_BASE}/auth/check-username`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username: usuario }),
+            });
+            if (!checkUser.ok) throw new Error();
+            const dataUser = await checkUser.json();
+            if (dataUser.exists) {
+              mensagemEl.textContent = "Nome de usuário já em uso.";
+              return;
+            }
+          } catch {
+            mensagemEl.textContent = "Erro ao verificar nome de usuário.";
+            return;
+          }
+
+          if (senha !== confirmarSenha) {
+            mensagemEl.textContent = "As senhas não coincidem.";
+            return;
+          }
+
+          if (!senhaRegex.test(senha)) {
+            mensagemEl.textContent =
+              "A senha deve ter pelo menos 8 caracteres, incluindo uma maiúscula, uma minúscula, um número e um símbolo.";
+            return;
+          }
+
+          try {
+            const res = await fetch(`${API_BASE}/auth/register`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email,
+                name: nome,
+                username: usuario,
+                password: senha,
+                bio,
+              }),
+            });
+
+            if (!res.ok) {
+              const err = await res.json();
+              mensagemEl.textContent = err.message || "Erro ao registrar.";
+              return;
+            }
+
+            mensagemEl.classList.remove("text-warning");
+            mensagemEl.classList.add("text-success");
+            mensagemEl.textContent = "Registro realizado com sucesso!";
+
+            setTimeout(() => {
+              window.location.href = "frontend/src/view/login.html";
+            }, 1500);
+          } catch {
+            mensagemEl.textContent = "Erro ao conectar ao servidor.";
+          }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -20,18 +20,23 @@ export class RegisterDTO {
   })
   username: string;
 
-  @IsOptional()
-  @IsString()
-  name?: string;
+  @IsNotEmpty()
+  @MaxLength(100)
+  name!: string;
 
   @IsNotEmpty()
   @MinLength(8)
   @MaxLength(100)
-  @Matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/, {
+  @Matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])/, {
     message:
       "A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial",
   })
-  password: string;
+  password!: string;
+
+  @IsOptional()
+  @MinLength(1)
+  @MaxLength(500)
+  bio?: string;
 }
 
 export class LoginDTO {
@@ -49,7 +54,7 @@ export class ResetPasswordDTO {
   @IsNotEmpty()
   @MinLength(8)
   @MaxLength(100)
-  @Matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/, {
+  @Matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])/, {
     message:
       "A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial",
   })

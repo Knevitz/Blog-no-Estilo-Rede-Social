@@ -20,7 +20,8 @@ export class AuthService {
     email: string,
     username: string,
     password: string,
-    name?: string
+    name?: string,
+    bio?: string
   ): Promise<User> {
     const existingUser = await this.userRepository.findOne({
       where: [{ email }, { username }],
@@ -35,6 +36,7 @@ export class AuthService {
       email,
       username,
       name,
+      bio,
       password: hashedPassword,
       role: "user",
     });
