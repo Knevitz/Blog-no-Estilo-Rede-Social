@@ -20,14 +20,58 @@ angular
     };
   })
   .controller("PostController", function ($scope, $http, $interval) {
-    $scope.sidebarAberta = false; // controla o estado do menu lateral
-    $scope.seguidos = []; // lista de usuários seguidos
-    $scope.usuarioLogado = null; // dados do usuário atual
-    $scope.posts = []; // lista de postagens
+    $scope.sidebarAberta = false;
+    $scope.seguidos = [];
+    $scope.usuarioLogado = null;
+    $scope.posts = [];
 
     $scope.abrirMenu = function () {
       $scope.sidebarAberta = !$scope.sidebarAberta;
     };
+
+    function renovarToken() {
+      return $http
+        .post(
+          "http://localhost:3000/auth/refresh-token",
+          {},
+          { withCredentials: true }
+        )
+        .then((res) => {
+          localStorage.setItem("token", res.data.accessToken);
+          return res.data.accessToken;
+        });
+    }
+
+    function carregarUsuarioLogado() {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      $http
+        .get("http://localhost:3000/auth/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(function (response) {
+          $scope.usuarioLogado = response.data;
+        })
+        .catch(function (err) {
+          if (err.status === 401) {
+            renovarToken()
+              .then((novoToken) => {
+                return $http.get("http://localhost:3000/auth/profile", {
+                  headers: { Authorization: `Bearer ${novoToken}` },
+                });
+              })
+              .then(function (response) {
+                $scope.usuarioLogado = response.data;
+              })
+              .catch(function (erroFinal) {
+                console.error("Erro ao renovar token:", erroFinal);
+              });
+          } else {
+            console.error("Erro ao carregar usuário logado:", err);
+          }
+        });
+    }
 
     $scope.loadUsuarios = function () {
       // Carrega os usuários seguidos
@@ -40,15 +84,8 @@ angular
           console.error("Erro ao carregar usuários seguidos:", err);
         });
 
-      // Carrega o usuário logado
-      $http
-        .get("http://localhost:3000/usuarios/logado")
-        .then(function (response) {
-          $scope.usuarioLogado = response.data;
-        })
-        .catch(function (err) {
-          console.error("Erro ao carregar usuário logado:", err);
-        });
+      // Carrega o perfil do usuário logado
+      carregarUsuarioLogado();
     };
 
     $scope.loadPosts = function () {

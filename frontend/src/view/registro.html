@@ -105,9 +105,7 @@
         </form>
 
         <div class="mt-3 text-center">
-          <a href="frontend/src/view/login.html" class="text-white"
-            >Já tenho uma conta</a
-          >
+          <a href="login.html" class="text-white">Já tenho uma conta</a>
         </div>
 
         <div id="mensagem" class="mt-3 text-center text-warning"></div>
@@ -231,7 +229,7 @@
             mensagemEl.textContent = "Registro realizado com sucesso!";
 
             setTimeout(() => {
-              window.location.href = "frontend/src/view/login.html";
+              window.location.href = "login.html";
             }, 1500);
           } catch {
             mensagemEl.textContent = "Erro ao conectar ao servidor.";

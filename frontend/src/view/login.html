@@ -1,38 +1,149 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-  <meta charset="UTF-8" />
-  <title>☭ Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="ReL.css" />   
+  <head>
+    <meta charset="UTF-8" />
+    <title>☭ Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="ReL.css" />
     <link rel="stylesheet" href="index.css" />
-</head>
-<body>
-  <!-- Estrelas no fundo -->
-  <div class="stars"></div>
-  <div class="stars2"></div>
+  </head>
 
-  <div class="login-box" role="main" aria-label="Formulário de login">
-    <h3>☭</h3>
-    <form id="loginForm" novalidate>
-      <div class="mb-3">
-        <label for="email" class="form-label visually-hidden">E-mail</label>
-        <input type="email" id="email" class="form-control" placeholder="E-mail" required autofocus />
-      </div>
-      <div class="mb-3">
-        <label for="senha" class="form-label visually-hidden">Senha</label>
-        <input type="password" id="senha" class="form-control" placeholder="Senha" required />
-      </div>
-      <button type="submit" class="btn btn-primary w-100">Login</button>
-    </form>
-     <div class="text-center mt-3">
-    <a href="frontend/src/view/registro.html" class="text-white">Criar conta</a>
-  </div>
-  <div class="mt-3">
-        <a href="#" class="text-white">Esqueci minha senha</a>
-      </div>
-  </div>
+  <body class="bg-dark text-white">
+    <div class="stars"></div>
+    <div class="stars2"></div>
 
-</body>
+    <div
+      class="login-box container d-flex flex-column justify-content-center align-items-center vh-100"
+    >
+      <div class="w-100" style="max-width: 400px">
+        <h1 class="mb-2 text-center">☭</h1>
+        <h1 class="mb-4 text-center">Login</h1>
+
+        <form id="loginForm" novalidate>
+          <div class="mb-3">
+            <label for="email" class="form-label visually-hidden">E-mail</label>
+            <input
+              type="email"
+              id="email"
+              class="form-control"
+              placeholder="E-mail"
+              required
+              autofocus
+            />
+          </div>
+          <div class="mb-3 position-relative">
+            <label for="senha" class="form-label visually-hidden">Senha</label>
+            <input
+              type="password"
+              id="senha"
+              class="form-control"
+              placeholder="Senha"
+              required
+            />
+            <button
+              type="button"
+              class="btn btn-sm btn-secondary position-absolute top-0 end-0 mt-1 me-2"
+              onclick="toggleSenha('senha', this)"
+            >
+              ***
+            </button>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+
+        <div id="mensagem" class="mt-3 text-center text-warning"></div>
+
+        <div class="mt-3 text-center">
+          <a href="registro.html" class="text-white">Criar conta</a>
+        </div>
+
+        <div class="mt-3 text-center">
+          <a href="#" class="text-white">Esqueci minha senha</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function toggleSenha(id, btn) {
+        const input = document.getElementById(id);
+        input.type = input.type === "password" ? "text" : "password";
+        btn.textContent = input.type === "text" ? "123" : "***";
+      }
+    </script>
+
+    <script>
+      const API_BASE = "http://localhost:3000";
+
+      const mensagemEl = document.getElementById("mensagem");
+
+      function mostrarMensagem(texto, tipo = "warning") {
+        mensagemEl.textContent = texto;
+        mensagemEl.className = ""; // limpa classes anteriores
+        mensagemEl.classList.add("mt-3", "text-center");
+
+        if (tipo === "success") {
+          mensagemEl.classList.add("text-success");
+        } else if (tipo === "error") {
+          mensagemEl.classList.add("text-danger");
+        } else {
+          mensagemEl.classList.add("text-warning");
+        }
+
+        // Remove a mensagem após 5 segundos
+        setTimeout(() => {
+          mensagemEl.textContent = "";
+          mensagemEl.className = "";
+        }, 5000);
+      }
+
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const email = document.getElementById("email").value.trim();
+          const senha = document.getElementById("senha").value;
+
+          mensagemEl.textContent = ""; // limpa mensagem anterior
+
+          if (!email || !senha) {
+            mostrarMensagem("Preencha e-mail e senha.", "error");
+            return;
+          }
+
+          try {
+            const res = await fetch(`${API_BASE}/auth/login`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, password: senha }),
+            });
+
+            if (!res.ok) {
+              const errorData = await res.json();
+              mostrarMensagem(
+                errorData.message || "Erro ao fazer login.",
+                "error"
+              );
+              return;
+            }
+
+            const data = await res.json();
+            localStorage.setItem("token", data.accessToken);
+
+            mostrarMensagem("Login realizado com sucesso!", "success");
+            setTimeout(() => {
+              window.location.href = "home.html";
+            }, 1500);
+          } catch (error) {
+            mostrarMensagem("Erro na conexão com o servidor.", "error");
+          }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>
