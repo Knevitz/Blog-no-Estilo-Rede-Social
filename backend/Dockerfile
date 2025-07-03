@@ -1,25 +1,25 @@
-# Etapa 1: build da aplicação
-FROM node:20 AS builder
+# backend/Dockerfile
 
+# Imagem base
+FROM node:18-alpine
+
+# Diretório de trabalho dentro do container
 WORKDIR /app
 
+# Copia package.json e package-lock.json para instalar dependências
 COPY package*.json ./
+
+# Instala dependências
 RUN npm install
 
+# Copia o restante do código
 COPY . .
+
+# Compila o TypeScript
 RUN npm run build
 
-# Etapa 2: imagem final de produção
-FROM node:20-slim
+# Expõe a porta que a aplicação vai rodar
+EXPOSE 3000
 
-WORKDIR /app
-
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package*.json ./
-
-RUN npm install --omit=dev
-
-ENV NODE_ENV=production
-ENV PORT=3000
-
+# Comando para iniciar a aplicação
 CMD ["node", "dist/index.js"]

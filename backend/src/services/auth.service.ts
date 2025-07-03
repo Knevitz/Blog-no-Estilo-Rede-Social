@@ -142,29 +142,36 @@ export class AuthService {
   private async sendResetEmail(email: string, token: string): Promise<void> {
     if (process.env.NODE_ENV === "test") return;
 
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT),
-      secure: false,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
+    try {
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT),
+        secure: process.env.SMTP_SECURE === "true", // ajuste se usar TLS/SSL
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      });
 
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+      const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
 
-    await transporter.sendMail({
-      from: `"Papo Popular" <${process.env.SMTP_USER}>`,
-      to: email,
-      subject: "Redefinição de senha",
-      html: `
+      await transporter.sendMail({
+        from: `"Papo Popular" <${process.env.SMTP_USER}>`,
+        to: email,
+        subject: "Redefinição de senha",
+        html: `
         <p>Você solicitou uma redefinição de senha para sua conta no Papo Popular.</p>
         <p>Clique no link abaixo para redefinir sua senha:</p>
         <a href="${resetUrl}">${resetUrl}</a>
         <p>Esse link expirará em 30 minutos.</p>
       `,
-    });
+      });
+
+      console.log(`E-mail de redefinição enviado para ${email}`);
+    } catch (error) {
+      console.error("Erro ao enviar e-mail:", error);
+      throw new Error("Falha no envio do e-mail de redefinição");
+    }
   }
 
   async resetPassword(token: string, newPassword: string): Promise<void> {
