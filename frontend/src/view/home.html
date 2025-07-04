@@ -62,11 +62,11 @@
         <div
           class="avatar rounded-circle bg-secondary d-flex justify-content-center align-items-center text-white me-3"
         >
-          {{ user.nome.charAt(0).toUpperCase() }}
+          {{ usuarioLogado.nome.charAt(0).toUpperCase() }}
         </div>
         <div>
-          <strong>{{ user.nome }}</strong><br />
-          <small>@{{ user.usuario }}</small>
+          <strong>{{ usuarioLogado.nome }}</strong><br />
+          <small>@{{ usuarioLogado.usuario }}</small>
         </div>
       </div>
 
@@ -126,8 +126,11 @@
                   class="btn btn-outline-light btn-sm border-0"
                   ng-click="curtir(post)"
                   aria-label="Curtir post"
+                  ng-class="{'text-danger': post.curtido}"
                 >
-                  <i class="bi bi-heart"></i>
+                  <i class="bi bi-heart-fill" ng-if="post.curtido"></i>
+                  <i class="bi bi-heart" ng-if="!post.curtido"></i>
+                  <span ng-if="post.likesCount > 0">{{ post.likesCount }}</span>
                 </button>
                 <button
                   class="btn btn-outline-light btn-sm border-0"
@@ -155,11 +158,84 @@
     <button
       type="button"
       class="btn btn-primary btn-lg rounded-circle position-fixed btn-novo-post"
-      ng-click="abrirNovoPost()"
+      ng-click="abrirModalNovoPost()"
       aria-label="Novo post"
     >
       +
     </button>
+    <!-- Modal Novo Post -->
+    <div
+      class="modal fade"
+      id="modalNovoPost"
+      tabindex="-1"
+      aria-labelledby="modalNovoPostLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-3">
+          <div class="modal-header border-0 pb-0">
+            <h5 class="modal-title" id="modalNovoPostLabel">Novo Post</h5>
+            <button
+              type="button"
+              class="btn-close"
+              aria-label="Fechar"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <textarea
+              ng-model="novoPost.content"
+              class="form-control mb-2"
+              placeholder="Escreva seu post aqui..."
+            ></textarea>
+
+            <div class="mb-2">
+              <div class="d-flex gap-1 mb-2 flex-wrap">
+                <span
+                  class="badge bg-secondary d-flex align-items-center"
+                  ng-repeat="tag in novoPost.tags"
+                >
+                  #{{ tag }}
+                  <i class="bi bi-x ms-1" ng-click="removerTag(tag)"></i>
+                </span>
+              </div>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  ng-model="novaTag"
+                  placeholder="Adicionar tag"
+                />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  ng-click="adicionarTag()"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer border-0 pt-2">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              ng-click="criarPost()"
+              data-bs-dismiss="modal"
+            >
+              Enviar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- AngularJS Controller -->
     <script src="../App.js"></script>

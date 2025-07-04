@@ -24,7 +24,11 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.css"],
+            "styles": [
+              "src/view/index.css",
+              "src/view/ReL.css",
+              "src/view/perfil.css"
+            ],
             "scripts": [],
             "server": "src/main.server.ts",
             "outputMode": "server",
@@ -82,7 +86,11 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/index.css", "src/ReL.css", "src/perfil.css"],
+            "styles": [
+              "src/view/index.css",
+              "src/view/ReL.css",
+              "src/view/perfil.css"
+            ],
             "scripts": []
           }
         }

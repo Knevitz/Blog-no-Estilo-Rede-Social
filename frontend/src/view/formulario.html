@@ -1,140 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    <div class="modal fade" id="modalNovoPost" tabindex="-1" aria-labelledby="modalNovoPostLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content p-3">
-        <div class="modal-header border-0 pb-0">
-          <h5 class="modal-title" id="modalNovoPostLabel">Novo Post</h5>
-          <button type="button" class="btn-close btn-close-white" aria-label="Fechar" ng-click="fecharModal()"></button>
-        </div>
-        <div class="modal-body">
-          <textarea ng-model="novoPost.conteudo" placeholder="Escreva seu post aqui..."></textarea>
-          <input type="text" class="tags-input" ng-model="novoPost.tagsString" placeholder="Tags separadas por espaço (#tag)" />
-          <small class="text-muted">Digite tags separadas por espaço. Exemplo: musica academia lifestyle</small>
-        </div>
-        <div class="modal-footer border-0 pt-2">
-          <button type="button" class="btn btn-secondary" ng-click="fecharModal()">Cancelar</button>
-          <button type="button" class="btn btn-primary" ng-click="enviarPost()">Enviar</button>
+  </head>
+  <body>
+    <div
+      class="modal fade"
+      id="modalNovoPost"
+      tabindex="-1"
+      aria-labelledby="modalNovoPostLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-3">
+          <div class="modal-header border-0 pb-0">
+            <h5 class="modal-title" id="modalNovoPostLabel">Novo Post</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              aria-label="Fechar"
+              ng-click="fecharModal()"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <textarea
+              ng-model="novoPost.conteudo"
+              placeholder="Escreva seu post aqui..."
+            ></textarea>
+            <input
+              type="text"
+              class="tags-input"
+              ng-model="novoPost.tagsString"
+              placeholder="Tags separadas por espaço (#tag)"
+            />
+            <small class="text-muted"
+              >Digite tags separadas por espaço. Exemplo: musica academia
+              lifestyle</small
+            >
+          </div>
+          <div class="modal-footer border-0 pt-2">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              ng-click="fecharModal()"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              ng-click="enviarPost()"
+            >
+              Enviar
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="container my-4">
-    <div class="card bg-dark text-white rounded shadow-sm mb-4" ng-repeat="post in posts track by $index">
-      <div class="card-body">
-        <div class="d-flex align-items-center mb-3">
-          <div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center text-white me-3" style="width: 40px; height: 40px;">
-            <span class="fw-bold">{{ post.usuario.charAt(0).toUpperCase() }}</span>
+    <div class="container my-4">
+      <div
+        class="card bg-dark text-white rounded shadow-sm mb-4"
+        ng-repeat="post in posts track by $index"
+      >
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-3">
+            <div
+              class="rounded-circle bg-secondary d-flex justify-content-center align-items-center text-white me-3"
+              style="width: 40px; height: 40px"
+            >
+              <span class="fw-bold"
+                >{{ post.usuario.charAt(0).toUpperCase() }}</span
+              >
+            </div>
+            <div>
+              <strong>{{ post.nome }}</strong><br />
+              <small class="text-muted">@{{ post.usuario }}</small>
+            </div>
           </div>
-          <div>
-            <strong>{{ post.nome }}</strong><br />
-            <small class="text-muted">@{{ post.usuario }}</small>
+          <div class="mt-2 small d-flex gap-2 flex-wrap">
+            <span class="badge bg-secondary" ng-repeat="tag in post.tags"
+              >#{{ tag }}</span
+            >
           </div>
-        </div>
-        <div class="bg-light text-dark p-3 rounded fs-5">
-          {{ post.conteudo }}
-        </div>
-        <div class="mt-2 small d-flex gap-2 flex-wrap">
-          <span class="badge bg-secondary" ng-repeat="tag in post.tags">#{{ tag }}</span>
-        </div>
-        <div class="mt-3 d-flex gap-4 fs-5">
-          <button class="btn btn-outline-light btn-sm border-0" ng-click="comentar(post)" aria-label="Comentar">
-            <i class="bi bi-chat"></i>
-          </button>
-          <button class="btn btn-outline-light btn-sm border-0" ng-click="curtir(post)" aria-label="Curtir">
-            <i class="bi" ng-class="{'bi-heart-fill text-danger': post.curtido, 'bi-heart': !post.curtido}"></i>
-          </button>
-          <button class="btn btn-outline-danger btn-sm border-0" ng-click="deletarPost($index)" aria-label="Deletar">
-            <i class="bi bi-trash"></i>
-          </button>
-        </div>
-        <div class="mt-3 text-muted">
-          {{ post.data | date:'dd/MM/yyyy HH:mm' }}
+          <div class="mt-3 d-flex gap-4 fs-5">
+            <button
+              class="btn btn-outline-light btn-sm border-0"
+              ng-click="comentar(post)"
+              aria-label="Comentar"
+            >
+              <i class="bi bi-chat"></i>
+            </button>
+            <button
+              class="btn btn-outline-light btn-sm border-0"
+              ng-click="curtir(post)"
+              aria-label="Curtir"
+            >
+              <i
+                class="bi"
+                ng-class="{'bi-heart-fill text-danger': post.curtido, 'bi-heart': !post.curtido}"
+              ></i>
+            </button>
+            <button
+              class="btn btn-outline-danger btn-sm border-0"
+              ng-click="deletarPost($index)"
+              aria-label="Deletar"
+            >
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+          <div class="mt-3 text-muted">
+            {{ post.data | date:'dd/MM/yyyy HH:mm' }}
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    angular.module('AppSocial', [])
-      .controller('PerfilController', function($scope) {
-        $scope.posts = [
-          {
-            nome: 'Nação dos guri da silva hehehe😴',
-            usuario: 'gremiodasilva',
-            conteudo: 'Sou hetero mais amoooo o neymar serio, jurooo!!! que surto foi esse!!!',
-            tags: ['musica', 'academia', 'lifestyle'],
-            data: new Date(),
-            curtido: false
-          }
-        ];
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      angular
+        .module("AppSocial", [])
+        .controller("PerfilController", function ($scope) {
+          $scope.posts = [
+            {
+              nome: "Nação dos guri da silva hehehe😴",
+              usuario: "gremiodasilva",
+              conteudo:
+                "Sou hetero mais amoooo o neymar serio, jurooo!!! que surto foi esse!!!",
+              tags: ["musica", "academia", "lifestyle"],
+              data: new Date(),
+              curtido: false,
+            },
+          ];
 
-        $scope.novoPost = {
-          conteudo: '',
-          tagsString: ''
-        };
-
-        const modalEl = document.getElementById('modalNovoPost');
-        const bsModal = new bootstrap.Modal(modalEl);
-
-        $scope.abrirModal = function() {
-          bsModal.show();
-        };
-
-        $scope.fecharModal = function() {
-          bsModal.hide();
-          $scope.novoPost.conteudo = '';
-          $scope.novoPost.tagsString = '';
-          $scope.$applyAsync();
-        };
-
-        $scope.enviarPost = function() {
-          if (!$scope.novoPost.conteudo.trim()) {
-            alert('Por favor, escreva algo no post.');
-            return;
-          }
-
-          const tagsArr = $scope.novoPost.tagsString
-            .split(' ')
-            .map(t => t.trim())
-            .filter(t => t.length > 0);
-
-          const post = {
-            nome: 'Você',
-            usuario: 'voce',
-            conteudo: $scope.novoPost.conteudo,
-            tags: tagsArr,
-            data: new Date(),
-            curtido: false
+          $scope.novoPost = {
+            conteudo: "",
+            tagsString: "",
           };
 
-          $scope.posts.unshift(post);
+          const modalEl = document.getElementById("modalNovoPost");
+          const bsModal = new bootstrap.Modal(modalEl);
 
-          $scope.fecharModal();
-        };
+          $scope.abrirModal = function () {
+            bsModal.show();
+          };
 
-        $scope.curtir = function(post) {
-          post.curtido = !post.curtido;
-        };
+          $scope.fecharModal = function () {
+            bsModal.hide();
+            $scope.novoPost.conteudo = "";
+            $scope.novoPost.tagsString = "";
+            $scope.$applyAsync();
+          };
 
-        $scope.comentar = function(post) {
-          alert('Comentando no post de @' + post.usuario);
-        };
+          $scope.enviarPost = function () {
+            if (!$scope.novoPost.conteudo.trim()) {
+              alert("Por favor, escreva algo no post.");
+              return;
+            }
 
-        $scope.deletarPost = function(index) {
-          if (confirm('Tem certeza que deseja deletar este post?')) {
-            $scope.posts.splice(index, 1);
-          }
-        };
-      });
-  </script>
-</body>
+            const tagsArr = $scope.novoPost.tagsString
+              .split(" ")
+              .map((t) => t.trim())
+              .filter((t) => t.length > 0);
+
+            const post = {
+              nome: "Você",
+              usuario: "voce",
+              conteudo: $scope.novoPost.conteudo,
+              tags: tagsArr,
+              data: new Date(),
+              curtido: false,
+            };
+
+            $scope.posts.unshift(post);
+
+            $scope.fecharModal();
+          };
+
+          $scope.curtir = function (post) {
+            post.curtido = !post.curtido;
+          };
+
+          $scope.comentar = function (post) {
+            alert("Comentando no post de @" + post.usuario);
+          };
+
+          $scope.deletarPost = function (index) {
+            if (confirm("Tem certeza que deseja deletar este post?")) {
+              $scope.posts.splice(index, 1);
+            }
+          };
+        });
+    </script>
+  </body>
 </html>

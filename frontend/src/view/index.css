@@ -102,3 +102,34 @@ body {
   max-width: 400px;
   box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
 }
+
+.btn-primary {
+  background-color: #fd0202 !important;
+  border: none !important;
+  color: white !important;
+  padding: 10px 20px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out !important;
+  outline: none !important;
+  box-shadow: none !important;
+  user-select: none !important;
+}
+
+.btn-primary:hover {
+  background-color: #df0000 !important;
+}
+
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: #a70000 !important; /* mantém o mesmo do hover */
+  outline: none !important;
+  box-shadow: none !important;
+  transform: scale(0.98) !important;
+}
+
+.btn-primary:focus-visible {
+  outline: none !important;
+}
